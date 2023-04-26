@@ -35,6 +35,7 @@ class HelpModel extends Action{
         text += this.line + "\n"
         text += "📝 Để xem chi tiết lệnh, hãy chat <prefix>help <tên lệnh> \n"
         text += "📝 Để xem trang tiếp theo, hãy chat <prefix>help <số trang> \n"
+        text += "🔢  Hiện tại có " + list.length + " lệnh có thể dùng\n"
         text +="📟 Trang: [" + page + "/" + Math.ceil(list.length / 10) + "]\n"
         return text;
     }

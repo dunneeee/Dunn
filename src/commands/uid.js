@@ -21,7 +21,7 @@ class Uid extends Command {
             return text;
         }
         const link = args[0];
-        if(!link) return "Vui lòng nhập @tag/link";
+        if(!link) return event.senderID;
         const type = AddModel.checkType(link);
         if(type !== 1) return "Link facebook không được để trống!"
         const id = await AddModel.getFacebookId(link);
