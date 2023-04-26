@@ -11,6 +11,7 @@ class MyStream {
     static async getStream(url, filename) {
         return new Promise((reslove, reject) => {
             const file = new MyFile(join(__dirname, "../temp/" + filename))
+            if(!file.existsDir()) file.createDir();
             const stream = file.getWriteStream()
             axios.get(url, {responseType: 'stream'}).then((response) => {
                 response.data.pipe(stream)
