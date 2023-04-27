@@ -19,6 +19,7 @@ class Info extends Command {
         text += "👉 Prefix mặc định: " + config.prefix + "\n"
         text += "📖 Ngôn ngữ: " + Language.language + "\n"
         text += "⏰ Độ trễ: " + this.message.delay + "\n"
+        text += "👥 Admin: " + config.admins.map((ad) => ad.name).join(", ") + "\n"
         text += this.line + "\n"
         text += "📗 Có: " + this.commandManager.size + " lệnh\n"
         text += "📕 Có: " + (await Thread.getAll())?.length + " nhóm\n"
