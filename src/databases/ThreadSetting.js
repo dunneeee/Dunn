@@ -23,7 +23,7 @@ class ThreadSetting {
     }
 
     async save() {
-        await db.update({id: this.id}, this.getObject(), {upsert: true})
+        await db.update({id: this.id}, {$set: this.getObject()}, {upsert: true})
         return this;
     }
 

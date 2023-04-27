@@ -1,4 +1,6 @@
 import  Datastore from 'nedb-promises'
+import User from './User'
+import Thread from './Thread'
 const db = Datastore.create({
     autoload: true,
     filename: 'src/data/Ban.db'
@@ -32,12 +34,40 @@ export default class Ban {
         return {day, hour, minute, second}
     }
 
+    getTimeText() {
+        const {day, hour, second, minute} = this.getTimeCount()
+        let text = ""
+        if(day > 0) text += `${day} ngày `
+        if(hour > 0) text += `${hour} giờ `
+        if(minute > 0) text += `${minute} phút `
+        if(second > 0) text += `${second} giây `
+        return text
+    }
+
+    async getInfoText() {
+        let user;
+        if(this.id == this.threadID) {
+            user = await Thread.get(this.threadID);
+        }else {
+            user = await User.get(this.id, this.threadID);
+        }
+        let text = "";
+        if(user) {
+            text += this.id != this.threadID ? `👥 Người bị cấm: ${user.name}\n` : ""
+            text += `📑 Lý do: ${this.reason}\n`
+            text += `⌚ Thời gian cấm: ${this.getTimeText()}\n`
+            text += `👤 Người cấm: ${(await User.get(this.authorID, this.threadID))?.name || this.authorID}\n`
+        }
+        return text;
+    }
+
     isOutTime() {
+        if(!this.time) return true;
         return Date.now() >= this.time
     }
 
     async save() {
-        await db.update({id: this.id, threadID: this.threadID}, this.getObject(), {upsert: true})
+        await db.update({id: this.id, threadID: this.threadID}, {$set: this.getObject()}, {upsert: true})
         return this;
     }
 

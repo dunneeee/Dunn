@@ -5,11 +5,10 @@ const db = Datastore.create({
 })
 
 export default class Thread {
-    constructor({id, name, prefix, banStatus}) {
+    constructor({id, name, prefix}) {
         this.id = id
         this.name = name
         this.prefix = prefix
-        this.banStatus = banStatus
     }
 
     getObject() {
@@ -17,12 +16,11 @@ export default class Thread {
             id: this.id,
             name: this.name,
             prefix: this.prefix,
-            banStatus: this.banStatus
         }
     }
 
     async save() {
-        await db.update({id: this.id}, this.getObject(), {upsert: true})
+        await db.update({id: this.id}, {$set: this.getObject()}, {upsert: true})
         return this;
     }
 
@@ -43,10 +41,9 @@ export default class Thread {
         return data.map(e => new Thread(e))
     }
 
-    static async create({id, name, prefix, banStatus}) {
+    static async create({id, name, prefix}) {
         if(!prefix) prefix = "/"
-        if(typeof banStatus !== 'boolean') banStatus = false
-        let data = await db.insert({id, name, prefix, banStatus})
+        let data = await db.insert({id, name, prefix})
         return new Thread(data)
     }
 

@@ -5,11 +5,10 @@ const db = Datastore.create({
 })
 
 export default class User {
-    constructor({id, name, threadID, banStatus, money, isAdmin, gender}) {
+    constructor({id, name, threadID, money, isAdmin, gender}) {
         this.id = id
         this.name = name
         this.threadID = threadID
-        this.banStatus = banStatus
         this.money = money
         this.isAdmin = isAdmin
         this.gender = gender
@@ -20,7 +19,6 @@ export default class User {
             id: this.id,
             name: this.name,
             threadID: this.threadID,
-            banStatus: this.banStatus,
             money: this.money,
             isAdmin: this.isAdmin,
             gender: this.gender
@@ -49,11 +47,10 @@ export default class User {
         return data.map(e => new User(e))
     }
 
-    static async create({id, name, threadID, banStatus, money, isAdmin, gender}) {
+    static async create({id, name, threadID, money, isAdmin, gender}) {
         if(!money) money = 0
-        if(typeof banStatus !== 'boolean') banStatus = false
         if(typeof isAdmin !== 'boolean') isAdmin = false
-        let data = await db.insert({id, name, threadID, banStatus, money, isAdmin, gender})
+        let data = await db.insert({id, name, threadID, money, isAdmin, gender})
         return new User(data)
     }
 
@@ -67,5 +64,12 @@ export default class User {
         let data = await db.findOne({id, threadID})
         if(!data) return false
         return true
+    }
+
+    static async getsWithTypes(id, types) {
+        if(!types || typeof types !== 'object' || Array.isArray(types)) return []
+        let data = await db.find({id, ...types})
+        if(!data) return []
+        return data.map(e => new User(e))
     }
 }

@@ -1,4 +1,4 @@
-import {Command, Language} from 'fca-dunnn'
+import {Command, Language, Time} from 'fca-dunnn'
 import { Thread, User } from '../databases'
 
 class Info extends Command {
@@ -19,7 +19,7 @@ class Info extends Command {
         text += "👉 Prefix mặc định: " + config.prefix + "\n"
         text += "📖 Ngôn ngữ: " + Language.language + "\n"
         text += "⏰ Độ trễ: " + this.message.delay + "\n"
-        text += "👥 Admin: " + config.admins.map((ad) => ad.name).join(", ") + "\n"
+        text += config.admins.length > 0 ? "👑 Admins: " + config.admins.join(", ") + "\n" : ""
         text += this.line + "\n"
         text += "📗 Có: " + this.commandManager.size + " lệnh\n"
         text += "📕 Có: " + (await Thread.getAll())?.length + " nhóm\n"

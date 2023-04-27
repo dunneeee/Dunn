@@ -57,7 +57,7 @@ class YoutubeModel {
     try {
       info = await ytdl.getInfo(id);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return Promise.reject({
         des: "Có lỗi xảy ra khi tìm kiếm video",
         err: e,

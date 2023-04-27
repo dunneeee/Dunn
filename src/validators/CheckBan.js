@@ -1,116 +1,115 @@
 import { Validator } from "fca-dunnn";
-import { Ban, Thread, User } from "../databases";
+import { Fca } from "fca-dunnn/types/Fca";
+import { Ban, User } from "../databases";
 
 class Checkban extends Validator {
-    notied = [];
-    timeToSendNoti = 1000 * 60 * 5;
-    async execute(event) {
-        if(this.notied.find(item => item.threadID == event.threadID && item.senderID == (event.isGroup ? event.threadID : event.senderID))) return {
-            type: "error",
-            message: "",
-        };
+  constructor(dl) {
+    super(dl, {
+      name: "check_ban",
+    });
+  }
 
-        const thread = await Thread.get(event.threadID)
-        if(thread) {
-            if(!thread.banStatus) {
-                return {
-                    type: "warning",
-                    message: "Nhóm này không bị cấm sử dụng bot"
-                }
-            }
-    
-            const banInfo = await Ban.get(event.threadID, event.threadID)
-            if(!banInfo) return {
-                type: "warning",
-                message: "Không tồn tại thông tin cấm sử dụng bot của nhóm này"
-            }
-    
-            if(banInfo.isOutTime()) {
-                await banInfo.delete()
-                return {
-                    type: "success",
-                    message: "Thời gian cấm sử dụng bot của nhóm này đã hết"
-                }
-            }
-    
-            const times = banInfo.getTimeCount()
-            
-            this.notied.push(() => {
-                const data = {
-                    threadID: event.threadID,
-                    senderID: event.threadID,
-                    delete: () => {
-                        this.notied = this.notied.filter(item => item.senderID != event.senderID)
-                    },
-                    time: Date.now() + this.timeToSendNoti
-                }
+  timeToDelay = 1000 * 60 * 5;
 
-                setTimeout(() => {
-                    data.delete()
-                }, this.timeToSendNoti)
+  /**
+   * @type {
+   * {
+   * userID: string,
+   * threadID: string,
+   * delete(): void;
+   * }[]
+   * }
+   */
+  notieds = [];
 
-                return data;
-            })
+  getNoti(userID, threadID) {
+    return this.notieds.find(
+      (noti) => noti.userID === userID && noti.threadID === threadID
+    );
+  }
 
+  deleNoti(userID, threadID) {
+    const noti = this.getNoti(userID, threadID);
+    this.notieds.splice(this.notieds.indexOf(noti), 1);
+  }
 
-            return {
-                type: "error",
-                message: `⌚ Nhóm này bị cấm sử dụng bot trong ${times.day} ngày ${times.hour} giờ ${times.minute} phút ${times.second} giây.\n📝 Lý do: ${banInfo.reason}\n`
-            }
-        }
+  addNoti(userID, threadID) {
+    const newNoti = {
+      userID,
+      threadID,
+      delete: () => {
+        this.deleNoti(userID, threadID);
+      },
+    };
+    this.notieds.push(newNoti);
 
-        const user = await User.get(event.senderID, event.threadID)
-        if(user) {
-            if(!user.banStatus) {
-                return {
-                    type: "warning",
-                    message: "Người dùng này không bị cấm sử dụng bot"
-                }
-            }
-    
-            const banInfo = await Ban.get(event.senderID, event.threadID)
-            if(!banInfo) return {
-                type: "warning",
-                message: "Không tồn tại thông tin cấm sử dụng bot của người dùng này"
-            }
-    
-            if(banInfo.isOutTime()) {
-                await banInfo.delete()
-                return {
-                    type: "success",
-                    message: "Thời gian cấm sử dụng bot của người dùng này đã hết"
-                }
-            }
+    setTimeout(() => {
+      newNoti.delete();
+    }, this.timeToDelay);
+  }
 
-            this.notied.push(() => {
-                const data = {
-                    threadID: event.threadID,
-                    senderID: event.senderID,
-                    delete: () => {
-                        this.notied = this.notied.filter(item => item.senderID != event.senderID)
-                    },
-                    time: Date.now() + this.timeToSendNoti
-                }
-
-                setTimeout(() => {
-                    data.delete()
-                }, this.timeToSendNoti)
-
-                return data;
-            })
-
-            const times = banInfo.getTimeCount()
-            return {
-                type: "error",
-                message: `⌚ Người dùng này bị cấm sử dụng bot trong ${times.day} ngày ${times.hour} giờ ${times.minute} phút ${times.second} giây.\n📝 Lý do: ${banInfo.reason}\n`
-            }
-        }
-        
-        return {
-            type: "success",
-            message: "Không có thông tin cấm sử dụng bot của nhóm này"
-        }
+  /**
+   *
+   * @param {Fca.MessageType} event
+   * @returns {Promise<import("fca-dunnn/src/managers/ValidatorManager").ValidatorResponse>}
+   */
+  async execute(event) {
+    if(event.type === 'message' || event.type === 'message_reply') {
+        const senderID = event.senderID;
+        const threadID = event.threadID;
+        const resUser = await this.handleBan(senderID, threadID);
+        if(resUser.type !== 'success') return resUser;
+        const resThread = await this.handleBan(threadID, threadID);
+        return resThread; 
     }
+    return {
+        message: null,
+        type: 'success'
+    }
+  }
+
+  /**
+   *
+   * @param {string} senderID
+   * @param {string} threadID
+   * @returns {Promise<import("fca-dunnn/src/managers/ValidatorManager").ValidatorResponse>}
+   */
+  async handleBan(senderID, threadID) {
+    const userBan = await Ban.get(senderID, threadID);
+    if (userBan) {
+      if (userBan.isOutTime()) {
+        await userBan.delete();
+        this.deleNoti(senderID, threadID);
+        return {
+          type: "success",
+          message: "Bạn đã được giải phóng",
+        };
+      }
+      if (!this.getNoti(senderID, threadID)) {
+        this.addNoti(senderID, threadID);
+        const time = userBan.getTimeText()
+        const authorName = userBan.authorID
+          ? (await User.get(userBan.authorID, threadID))?.name || ""
+          : "";
+        return {
+          type: "error",
+          message:
+            (senderID == threadID ? "Nhóm bạn" : "Bạn") +
+            " đã bị " +
+            (authorName ? `${authorName}` : "bot") +
+            ` cấm sử dụng bot trong ${time} nữa vì lý do: ${userBan.reason}`,
+        };
+      }
+      return {
+        type: "error",
+        message: null,
+      };
+    }
+    return {
+      message: null,
+      type: "success",
+    };
+  }
 }
 
 export default Checkban;
