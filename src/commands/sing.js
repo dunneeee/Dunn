@@ -37,6 +37,7 @@ class Sing extends Command {
             if(isNaN(index) || index < 1 || index > data.length) return "Vui lòng nhập số từ 1 đến " + data.length;
             index--;
             const audio = data[index]
+            await this.api.unsendMessage(temp.messageID)
             const res = await this.message.reply("🔃 Đang xử lý...", event.threadID, event.messageID)
             const messageObj = await this.model.getMessageObject(audio)
             await this.api.unsendMessage(res.messageID)
