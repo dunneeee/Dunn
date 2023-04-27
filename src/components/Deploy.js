@@ -10,7 +10,7 @@ export default class Deploy extends Dunn {
 
     async load() {
         this.customHook(new MyHook(this))
-        this.message.setDeplay(10);
+        // this.message.setDeplay(10);
         await this.loadCommands(join(__dirname, "../commands"))
         await this.loadEvents(join(__dirname, "../events"))
         this.addValidator(new CheckBan(this, {name: "check_ban"}))

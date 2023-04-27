@@ -49,6 +49,7 @@ class UnsendModel extends Action {
         if(!settings) return "Chưa có cài đặt nào cho nhóm này";
         return Object.keys(settings.unsend).join(", ");
     }
+
 }
 
 export default UnsendModel;

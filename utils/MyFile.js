@@ -21,6 +21,10 @@ class MyFile {
         return fs.readFileSync(this.path, 'utf8');
     }
 
+    readJson() {
+        return JSON.parse(this.read());
+    }
+
     getReadStream() {
         return fs.createReadStream(this.path);
         
@@ -36,6 +40,10 @@ class MyFile {
 
     dispose() {
         fs.unlinkSync(this.path);
+    }
+
+    static createRandomName(ext) {
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + ext;
     }
 }
 
