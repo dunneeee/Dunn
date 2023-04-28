@@ -38,8 +38,12 @@ class Sing extends Command {
             index--;
             const audio = data[index]
             await this.api.unsendMessage(temp.messageID)
+            const idTimeOut = setTimeout(() => {
+                this.message.reply("🌍 Mạng đang nghẽn, vui lòng chờ...", event.threadID, event.messageID)
+            }, 10*1000)
             const res = await this.message.reply("🔃 Đang xử lý...", event.threadID, event.messageID)
             const messageObj = await this.model.getMessageObject(audio)
+            clearTimeout(idTimeOut);
             await this.api.unsendMessage(res.messageID)
             temp.delete()
             return messageObj;

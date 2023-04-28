@@ -49,8 +49,9 @@ class SingModel extends Action{
         if(!id) return "Tham số truyền vào không hợp lệ! Vui lòng liên hệ admin!"
         try {
             const file = await this.youtube.download(id, type)
+            if(file.getFileSize() > 26214400) return "🔕 File quá lớn, vui lòng thử lại với bài hát khác!"
             return {
-                body: media.title + " - " + media.channel + "\n" + this.line + "\n",
+                body: (type == 'video' ? "🎞️ " : "🎶 ") + media.title + " - " + media.channel + "\n" + this.line + "\n",
                 attachment: file.getReadStream().on('close', () => {
                     file.dispose()
                 })

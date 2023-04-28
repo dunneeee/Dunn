@@ -42,6 +42,21 @@ class MyFile {
         fs.unlinkSync(this.path);
     }
 
+    getFileSize(type) {
+        const stats = fs.statSync(this.path);
+        const fileSizeInBytes = stats.size;
+        switch (type) {
+            case 'KB':
+                return fileSizeInBytes / 1024;
+            case 'MB':
+                return fileSizeInBytes / (1024 * 1024);
+            case 'GB':
+                return fileSizeInBytes / (1024 * 1024 * 1024);
+            default:
+                return fileSizeInBytes;
+        }
+    }
+
     static createRandomName(ext) {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + ext;
     }

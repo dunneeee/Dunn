@@ -83,6 +83,8 @@ class YoutubeModel {
       ytdl
         .downloadFromInfo(info, { format: formats[0] })
         .on("error", (e) => {
+          file.dispose()
+          console.log(e)
           reject({
             des: "Có lỗi xảy ra khi tải xuống",
             err: e,
@@ -99,7 +101,6 @@ class YoutubeModel {
     switch (type) {
       case "video":
         return (
-          f.contentLength < 25 * 1024 * 1024 &&
           f.hasAudio &&
           f.hasVideo &&
           f.container === "mp4"
