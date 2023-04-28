@@ -8,7 +8,7 @@ class Ban extends Command {
             name: "ban",
             author: "Dunn",
             description: "Cấm thành viên sử dụng bot",
-            usage: "<prefix>ban <@tag> [time(phút)] : [lý do]",
+            usage: "<prefix>ban <@tag/reply> [time(phút)] : [lý do]",
             permission: Permission.MOD
         }, dl)
 
@@ -25,7 +25,12 @@ class Ban extends Command {
 
         let text = args.join(" ");
         let userIds = Object.keys(event.mentions)
-        if(userIds.length === 0) return "Vui lòng tag người dùng cần cấm sử dụng bot"
+        if(userIds.length === 0) {
+            if(event.type !== "message_reply") return "❌ @tag hoặc reply tin nhắn của người dùng cần cấm sử dụng bot";
+            const {messageReply} = event;
+            if(messageReply.senderID === event.senderID) return "❌ Bạn không thể cấm chính mình";
+            userIds = [messageReply.senderID]
+        }
         const {time, reason} = BanModel.getBanInfo(text)
         if(time === null) return "Vui lòng nhập đúng cú pháp [thời gian][m/h/d/s] : [lý do] (Bắt buộc có \" : \")"
         return await this.model.banUser(userIds, event.threadID, {time,reason,authorID: event.senderID})

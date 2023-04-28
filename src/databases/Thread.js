@@ -52,4 +52,7 @@ export default class Thread {
         if(!data) return false
         return true
     }
+    static async resetData() {
+        await db.remove({}, {multi: true})
+    }
 }

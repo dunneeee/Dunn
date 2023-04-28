@@ -10,14 +10,19 @@ class Unban extends Command {
             author: "Dunn",
             coolDown: 5000,
             permission: Permission.MOD,
-            usage: "<prefix>unban <@tag>"
+            usage: "<prefix>unban <@tag/reply>"
         }, dl)
         this.model = new BanModel(dl);
     }
 
     async onCall({event, args}) {
         const userIds = Object.keys(event.mentions);
-        if(userIds.length === 0) return "Vui lòng tag người dùng cần bỏ cấm sử dụng bot"
+        if(userIds.length === 0) {
+            if(event.type !== "message_reply") return "❌ @tag hoặc reply tin nhắn của người dùng cần bỏ cấm sử dụng bot";
+            const {messageReply} = event;
+            if(messageReply.senderID === event.senderID) return "❌ Bạn không thể bỏ cấm chính mình";
+            userIds = [messageReply.senderID]
+        }
         return await this.model.unbanUser(userIds, event.threadID)
     }
 }

@@ -117,4 +117,7 @@ export default class Ban {
         return data.map(e => new Ban(e))
     }
 
+    static async resetData() {
+        await db.remove({}, {multi: true})
+    }
 }
