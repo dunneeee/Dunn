@@ -8,14 +8,14 @@ class SingModel extends Action{
         this.maxResult = maxResult || 6
     }
 
-    async search(query) {
+    async search({query}) {
         if(!this.youtube) return {
             msg: "Chưa cấu hình api youtube, vui lòng liên hệ admin!",
             list: []
         }
         let results;
         try {
-            results = await this.youtube.search(query, this.maxResult)
+            results = await this.youtube.search({query}, this.maxResult)
         }catch(e) {
             return {
                 msg: "Đã xảy ra lỗi khi tìm kiếm, vui lòng thử lại sau!",

@@ -17,9 +17,9 @@ const start = async () => {
         const deploy = new Deploy(facebook);
         await deploy.start({
             devMode: true,
-            language: "vi",
+            language: "en",
             logRecievedMessage: true,
-            translateMessage: false
+            translateMessage: true
         })
     }catch(e) {
         Logger.setLabel("START").error(e)

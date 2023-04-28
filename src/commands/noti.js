@@ -15,8 +15,8 @@ class Noti extends Command {
     }
 
     async onCall({event, args}) {
-        const uid = args[2];
-        const content = args.slice(3).join(" ");
+        const uid = args[0];
+        const content = args.slice(1).join(" ");
         if(!uid || !content) return this.usage.replace("<prefix>", await this.hook.getPrefix(event));
         if(isNaN(uid)) return "Vui lòng nhập uid là số";
         const info = await Thread.get(uid);
@@ -28,7 +28,7 @@ class Noti extends Command {
         msg += this.line + "\n"
         msg += "👉 " + content + "\n"
         msg += "👤 Người gửi: " + admin.name + "\n"
-        await this.message.reply(msg, info.threadID);
+        await this.message.reply(msg, info.id);
         return "Đã gửi thông báo đến nhóm " + info.name;
     }
 }

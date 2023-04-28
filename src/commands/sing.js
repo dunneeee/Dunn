@@ -16,7 +16,7 @@ class Sing extends Command {
     async onCall({event, args}) {
         const query = args.join(" ")
         if(!query) return this.usage.replace("<prefix>", await this.hook.getPrefix(event));
-        const {msg, list} = await this.model.search(query)
+        const {msg, list} = await this.model.search({query})
         if(!list || !list.length) return msg;
         const info = await this.message.reply(msg, event.threadID, event.messageID)
         this.messageTemp.add({

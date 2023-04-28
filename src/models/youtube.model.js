@@ -20,7 +20,7 @@ class YoutubeModel {
     });
   }
 
-  search(query, max = 10) {
+  search({query, duration}, max = 10) {
     return new Promise((reslove, reject) => {
       this.youtube.search.list(
         {
@@ -28,6 +28,7 @@ class YoutubeModel {
           q: query,
           type: "video",
           maxResults: max,
+          videoDuration: duration || "short"
         },
         (err, res) => {
           if (err) return reject(err);
