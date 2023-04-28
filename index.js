@@ -18,8 +18,8 @@ const start = async () => {
         await deploy.start({
             devMode: true,
             language: "vi",
-            logRecievedMessage: false,
-            translateMessage: true
+            logRecievedMessage: true,
+            translateMessage: false
         })
     }catch(e) {
         Logger.setLabel("START").error(e)

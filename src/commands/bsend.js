@@ -47,7 +47,7 @@ class BSend extends Command {
                 if(message) {
                     const messageObj = await this.model.convertToMessageObject(message)
                     const author = await this.model.getName(message.senderID, event.threadID);
-                    messageObj.body = `Tin nhắn của ${author} đã bị xoá:\n${messageObj.body}`
+                    messageObj.body = `🔔 Tin nhắn của ${author} đã bị xoá:\n${messageObj.body}`
                     await this.message.reply(messageObj, event.threadID)
                     this.model.removeMessage(event.threadID, message.messageID);
                 }

@@ -10,6 +10,8 @@ class ThreadSetting {
         this.id = data.id;
         this._unsend = data.unsend;
         this._bsend = data.bsend;
+        this._notiJoin = data.notiJoin;
+        this._notiLeave = data.notileave
     }
 
     get unsend() {
@@ -22,6 +24,14 @@ class ThreadSetting {
         return this._bsend || false;
     }
 
+    get notiJoin() {
+        return this._notiJoin ?? true;
+    }
+
+    get notiLeave() {
+        return this._notiLeave ?? true;
+    }
+
     async save() {
         await db.update({id: this.id}, {$set: this.getObject()}, {upsert: true})
         return this;
@@ -30,13 +40,15 @@ class ThreadSetting {
     async delete() {
         await db.remove({id: this.id})
         return this;
-    }
+    }   
 
     getObject() {
         return {
             id: this.id,
             unsend: this.unsend,
-            bsend: this.bsend
+            bsend: this.bsend,
+            notiJoin: this.notiJoin,
+            notiLeave: this.notiLeave
         }
     }
 
