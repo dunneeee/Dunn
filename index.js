@@ -17,7 +17,7 @@ const start = async () => {
         const deploy = new Deploy(facebook);
         await deploy.start({
             devMode: true,
-            language: "en",
+            language: "vi",
             logRecievedMessage: true,
             translateMessage: true
         })

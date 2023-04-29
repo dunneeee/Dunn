@@ -5,7 +5,7 @@ class KickModel extends Action{
       try {
         const threadInfo = await this.api.getThreadInfo(threadID)
         const admins = threadInfo.adminIDs
-        return admins.includes(senderID)
+        return admins.some(ad => ad.id == senderID)
       } catch(e) {
         return false;
       }     
