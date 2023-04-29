@@ -28,7 +28,7 @@ class YoutubeModel {
           q: query,
           type: "video",
           maxResults: max,
-          videoDuration: duration || "short"
+          videoDuration: duration || "any"
         },
         (err, res) => {
           if (err) return reject(err);
@@ -81,6 +81,23 @@ class YoutubeModel {
         )
       );
       const stream = file.getWriteStream();
+      console.log(formats[0].contentLength)
+      if(formats[0].contentLength > 25 * 1024 * 1024) {
+        file.dispose();
+        return reject({
+        des: "Video quá dài, không thể tải xuống!",
+        err: new Error("Video quá dài")
+      })}
+
+      setTimeout(() => {
+        stream.destroy();
+        file.dispose();
+        reject({
+          des: "Quá thời gian tải xuống!",
+          err: new Error("Timeout"),
+        });
+      }, 1000 * 60 * 5)
+
       ytdl
         .downloadFromInfo(info, { format: formats[0] })
         .on("error", (e) => {
