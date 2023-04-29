@@ -1,32 +1,27 @@
 import {Command, Language, Time} from 'fca-dunnn'
 import { Thread, User } from '../databases'
+import InfoModel from '../models/info.model'
 
 class Info extends Command {
     constructor(deploy) {
         super({
             name: 'info',
             description: "Xem thông tin của bot",
-            usage: "<prefix>info",
+            usage: "<prefix>info <\"\" | box | @tag | reply>",
             author: "Dunn"
         }, deploy)
+        this.model = new InfoModel(deploy);
     }
 
-    async onCall({event}) {
-        let text = ""
-        let config = this.botConfig
-        text += "🤖 Tên bot: " + config.name + "\n"
-        text += "👉 Prefix: " + (await this.hook.getPrefix(event)) + "\n"
-        text += "👉 Prefix mặc định: " + config.prefix + "\n"
-        text += "📖 Ngôn ngữ: " + Language.language + "\n"
-        text += "⏰ Độ trễ: " + this.message.delay + "\n"
-        text += config.admins.length > 0 ? "👑 Admins: " + config.admins.join(", ") + "\n" : ""
-        text += this.line + "\n"
-        text += "📗 Có: " + this.commandManager.size + " lệnh\n"
-        text += "📕 Có: " + (await Thread.getAll())?.length + " nhóm\n"
-        text += "📙 Có: " + (await User.getAll())?.length + " người dùng\n"
-        text += this.line + "\n"
-        text += "🌱 Mô tả: " + config.description + "\n"
-        return text;
+    async onCall({event, args}) {
+        if(args.length === 0) return (await this.model.getBotInfo()).toString()
+        const type = args[0].toLowerCase()
+        switch(type) {
+            case 'box':
+                return (await this.model.getThreadInfo(event.threadID)).toString()
+            default:
+                return "Chưa hỗ trợ loại này " + type
+        }
     }
 }
 

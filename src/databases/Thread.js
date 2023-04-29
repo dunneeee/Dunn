@@ -1,4 +1,5 @@
 import Datastore from 'nedb-promises'
+import { Logger } from 'fca-dunnn'
 const db = Datastore.create({
     autoload: true,
     filename: 'src/data/Thread.db'
@@ -45,6 +46,15 @@ export default class Thread {
         if(!prefix) prefix = "/"
         let data = await db.insert({id, name, prefix})
         return new Thread(data)
+    }
+
+    static async createWithInfo(info) {
+        const thread = await Thread.create({
+            name: info.name,
+            id: info.threadID,
+        })
+        Logger.setLabel("CREATE_THREAD").success(`Created thread ${thread.name} (${thread.id})`)
+        return thread;
     }
 
     static async has(id) {

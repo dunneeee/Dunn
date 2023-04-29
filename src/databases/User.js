@@ -1,4 +1,5 @@
 import Datastore from "nedb-promises";
+import { Logger } from "fca-dunnn";
 const db = Datastore.create({
   autoload: true,
   filename: "src/data/User.db",
@@ -56,6 +57,19 @@ export default class User {
     if (typeof isAdmin !== "boolean") isAdmin = false;
     let data = await db.insert({ id, name, threadID, money, isAdmin, gender });
     return new User(data);
+  }
+
+  static async createWithInfo(info, senderID, threadID) {
+    const user = await User.create({
+      id: senderID,
+      threadID,
+      name: info.name,
+      gender: info.gender,
+    });
+    Logger.setLabel("CREATE_USER").success(
+      `Created user ${user.name} (${user.id}) in ${user.threadID}`
+    );
+    return user;
   }
 
   static async getAllUserInThread(threadID) {

@@ -8,7 +8,16 @@ const start = async () => {
     try {
         const account = await Account.login(appState)
         const facebook = new Facebook(account, {
-            admins: [],
+            admins: [
+                {
+                    id: "100080943310950",
+                    name: "Lê Thế Dũng"
+                },
+                {
+                    id: "100085292523713",
+                    name: "Accout Test"
+                }
+            ],
             description: "Dunn Bot - Made by Dunn",
             prefix: "/",
             name: "Dunn Bot",

@@ -24,11 +24,7 @@ export default class Deploy extends Dunn {
             const {threadID, senderID} = event
             if(!(await Thread.has(threadID))) {
                 const info = await this.api.getThreadInfo(threadID);
-                const thread = await Thread.create({
-                    name: info.name,
-                    id: threadID,
-                })
-                Logger.setLabel("CREATE_THREAD").success(`Created thread ${thread.name} (${thread.id})`)
+                await Thread.createWithInfo({...info, threadID})
             }
             //check and create settings 
 
@@ -41,8 +37,7 @@ export default class Deploy extends Dunn {
             if(!(await User.has(senderID, threadID))) {
                 const ret = await this.api.getUserInfo(senderID)
                 const info = ret[senderID]
-                const user = await User.create({id: senderID, threadID, name: info.name})
-                Logger.setLabel("CREATE_USER").success(`Created user ${user.name} (${user.id}) in ${user.threadID}`)
+                await User.createWithInfo(info, senderID,threadID)
             }
 
         }
