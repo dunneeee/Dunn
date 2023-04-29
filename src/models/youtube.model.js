@@ -81,7 +81,6 @@ class YoutubeModel {
         )
       );
       const stream = file.getWriteStream();
-      console.log(formats[0].contentLength)
       if(formats[0].contentLength > 25 * 1024 * 1024) {
         file.dispose();
         return reject({
@@ -90,13 +89,13 @@ class YoutubeModel {
       })}
 
       setTimeout(() => {
-        stream.destroy();
-        file.dispose();
+        stream.destroy()
+        file.dispose()
         reject({
-          des: "Quá thời gian tải xuống!",
-          err: new Error("Timeout"),
-        });
-      }, 1000 * 60 * 5)
+          des: "Video quá dài, không thể tải xuống!",
+          err: new Error("Video quá dài")
+        })
+      }, 1000 * 5 * 60)
 
       ytdl
         .downloadFromInfo(info, { format: formats[0] })
@@ -111,7 +110,8 @@ class YoutubeModel {
         .pipe(stream)
         .on("finish", () => {
           reslove(file);
-        });
+        })
+        ;
     });
   }
 
