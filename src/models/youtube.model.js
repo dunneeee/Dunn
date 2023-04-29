@@ -92,8 +92,8 @@ class YoutubeModel {
         stream.destroy()
         file.dispose()
         reject({
-          des: "Video quá dài, không thể tải xuống!",
-          err: new Error("Video quá dài")
+          des: "Quá thời gian thực thi!",
+          err: new Error("Quá thời gian thực thi")
         })
       }, 1000 * 5 * 60)
 
