@@ -22,25 +22,12 @@ class UnsendModel extends Action {
         if(!key) return "Thiếu thuộc tính cần thay đổi";
         if(!value) return "Thiếu giá trị cần thay đổi";
         const settings = await ThreadSetting.get(threadID)
-        switch(key) {
-            case "onlymod":
-            case "onlyMod":
-            case "-om":
-                if(value == 'true') {
-                    settings.unsend.onlyMod = true
-                    await settings.save()
-                    return "Đã bật chế độ chỉ có quản trị viên mới có thể dùng lệnh này";
-                }   
-                else if(value == 'false') {
-                    settings.unsend.onlyMod = false
-                    await settings.save()
-                    return "Đã tắt chế độ chỉ có quản trị viên mới có thể dùng lệnh này";
-                }
-                else {
-                    return "Giá trị chỉ có thể là true hoặc false";
-                }
-            default:
-                return "Không tồn tại thuộc tính " + key + "Các thuộc tính có thể thay đổi: " + await this.getKeys(threadID);
+        if(!settings) return "Chưa có cài đặt nào cho nhóm này";
+        const {type,message} = settings.setUnsend(key, value)
+        if(type == "error") return message
+        if(type == "success") {
+            await settings.save()
+            return message
         }
     }
 

@@ -6,12 +6,16 @@ class Uid extends Command {
         super({
             name: "uid",
             author: "Dunn",
-            description: "Lấy uid của người dùng",
-            usage: "<prefix>uid <@tag/link>"
+            description: "Lấy uid của người dùng, nhóm",
+            usage: "<prefix>uid [<@tag/link> | box]"
         }, dl)
     }
 
     async onCall({event, args}) {
+        const flag = args[0];
+        if(flag === 'box') {
+            return event.threadID;
+        }
         const data = Object.entries(event.mentions);
         if(data.length) {
             let text = ""

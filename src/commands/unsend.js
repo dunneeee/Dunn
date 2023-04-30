@@ -7,7 +7,7 @@ class Unsend extends Command {
         name: "unsend",
         description: "xoá tin nhắn của bot gửi đi!",
         author: "Dunn",
-        usage: "<prefix>unsend(reply tin nhắn của bot)"            
+        usage: "\n<prefix>unsend(reply tin nhắn của bot)\n <prefix>unsend <onlymod/-om> [true/false] Bật chế độ chỉ có admin nhóm mới được gỡ tin nhắn!"            
         }, dl)
         this.model = new UnsendModel(dl)
     }
@@ -17,7 +17,7 @@ class Unsend extends Command {
             const [key, value] = args;
             const isMod = await this.model.isMod(event.senderID, event.threadID);
             if(!isMod) return "Bạn không phải là quản trị viên nhóm không thể dùng lệnh này";
-            return await this.model.handleSettings(key, value);
+            return await this.model.handleSettings(key, value, event.threadID);
         }
         const onlyMod = await this.model.onlyMod(event.threadID);
         if(onlyMod)  {
