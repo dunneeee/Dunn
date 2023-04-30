@@ -1,4 +1,4 @@
-import {Account, Logger, Facebook} from 'fca-dunnn'
+import {Account, Logger, Facebook, Language} from 'fca-dunnn'
 import {existsSync, readFileSync} from 'fs'
 import Deploy from './src/components/Deploy';
 
@@ -30,6 +30,7 @@ const start = async () => {
             logRecievedMessage: true,
             translateMessage: true
         })
+        console.log(Language.language)
     }catch(e) {
         Logger.setLabel("START").error(e)
     }

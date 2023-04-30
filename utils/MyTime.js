@@ -15,6 +15,11 @@ class MyTime extends Time {
             }
         }
     }
+
+    static getDay() {
+        const date = MyTime.now()
+        return date.day()
+    }
 }
 
 export default MyTime;

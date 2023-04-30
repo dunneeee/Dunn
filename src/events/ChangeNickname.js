@@ -22,7 +22,7 @@ class ChangeNickname extends Event {
                     await this.api.changeNickname(`[ ${this.botConfig.prefix} ] - ${this.botConfig.name} (${this.botConfig.description})`, event.threadID, this.botUuid)
                     let thread = await this.api.getThreadInfo(event.threadID)
                     Logger.setLabel("NOTIFICATION").info(await Language.handleText("Bot được thêm vào nhóm: " + thread.name + " (" + thread.threadID + ")"))
-                    return `Chào ${thread.name} 👋. Bot đã sẵn sàng được sử dụng. Vui lòng chat ${this.botConfig.prefix}help để xem cách sử dụng. Chúc các bạn có một ngày vui vẻ!`
+                    this.message.reply(`Chào ${thread.name} 👋. Bot đã sẵn sàng được sử dụng. Vui lòng chat ${this.botConfig.prefix}help để xem cách sử dụng. Chúc các bạn có một ngày vui vẻ!`, event.threadID)
                 }catch(e) {
                     Logger.setLabel(this.name).error(e)
                 }
