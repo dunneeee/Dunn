@@ -1,10 +1,9 @@
 import { Action } from "fca-dunnn";
+import MyArr from "../../utils/MyArr";
 
 class HelpModel extends Action{
     static splitPage(list, page = 1, limit = 10) {
-        let start = (page - 1) * limit;
-        let end = start + limit;
-        return list.slice(start, end);
+        return MyArr.splitPage(list, page, limit)
     }
 
     getCommandInfo(commandName) {

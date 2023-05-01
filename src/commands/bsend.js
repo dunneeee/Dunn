@@ -16,6 +16,11 @@ class BSend extends Command {
         this.model = new BsendModel(dl)
     }
 
+    async onLoad() {
+        await this.model.load();
+        return "Đã load các nhóm bật bsend!"
+    }
+
     async onCall({event, args}) {
         const type = args[0]
         if(!type) return this.usage;
@@ -33,7 +38,6 @@ class BSend extends Command {
 
     async onEvery(event) {
         if(event.type == 'message' || event.type == "message_reply") {
-            if(!this.model.isload) await this.model.load();
             const isOn = this.model.isOn(event.threadID)
             if(isOn) {
                 this.model.addMessage(event.threadID, event)

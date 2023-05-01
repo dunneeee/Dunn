@@ -2,6 +2,7 @@ import { Action, Logger } from "fca-dunnn";
 import ThreadSetting from "../databases/ThreadSetting";
 import MyStream from "../../utils/MyStream";
 import { User } from "../databases";
+import FbMessage from "../../utils/FbMessage";
 
 class BsendModel extends Action {
     threads = new Map()
@@ -61,51 +62,8 @@ class BsendModel extends Action {
         return this;
     }
 
-    async convertToMessageObject(message) {
-        const body = message.body
-        const attachment = []
-        const mentions = []
-        for(let item of message.attachments) {
-            let extend = "";
-            switch(item.type) {
-                case "photo":
-                    extend = "png"
-                    break;
-                case "video":
-                    extend = "mp4"
-                    break;
-                case "audio":
-                    extend = "mp4"
-                    break;
-                default:
-                    extend = item.filename.split(".").pop();
-            }
-            try {
-                const file = await MyStream.getStream(item.url, "temp"+ Date.now() + Math.floor(Math.random() * 10000) + "." + extend)
-            if(file) {
-                attachment.push(file.getReadStream().on('close', () => {
-                    file.dispose()
-                }))
-            }
-            }catch(e) {
-                Logger.setLabel("BSEND_MODEL").error(e)
-            }
-        }
-
-        // console.log(attachment)
-
-        for(let [id, name] of Object.entries(message.mentions) ) {
-            mentions.push({
-                id,
-                tag: "@" + name
-            })
-        }
-
-        return {
-            body,
-            attachment,
-            mentions
-        }
+     async convertToMessageObject(message) {
+        return await FbMessage.convertToMessageObj(message);
     }
 
     async getName(userID, threadID) {

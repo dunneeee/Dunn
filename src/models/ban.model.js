@@ -34,7 +34,7 @@ class BanModel extends Action {
     };
   }
 
-  static  async getListUserBanOfThreadText(threadID) {
+  static async getListUserBanOfThreadText(threadID) {
     const list = await Ban.getAllBanInThread(threadID);
     if(!list) return "Không có thông tin cấm sử dụng bot"
     if(list.length === 0) return "Không có thành viên nào bị cấm sử dụng bot"
