@@ -16,15 +16,13 @@ class Cmd extends Command {
         let cmdtext = args.join(" ");
         if (!cmdtext) return "Vui lòng nhập lệnh cần thực thi!";
         exec(cmdtext, (err, stdout, stderr) => {
-            if(err) {
-                this.message.reply(`Đã xảy ra lỗi khi thực thi lệnh: ${err.message}`, event.threadID, event.messageID)
-                return;
+            try {
+                if(err) return this.api.sendMessage(`Đã xảy ra lỗi: ${err}`, event.threadID, event.messageID);
+                if(stderr) return this.api.sendMessage(`Đã xảy ra lỗi: ${stderr}`, event.threadID, event.messageID);
+                if(stdout) return this.api.sendMessage(`${stdout}`, event.threadID, event.messageID);
+            }catch(e) {
+                console.log(e)
             }
-            if(stderr) {
-                this.message.reply(`Đã xảy ra lỗi khi thực thi lệnh: ${stderr}`, event.threadID, event.messageID)
-                return;
-            }
-            this.message.reply(`Đã thực thi lệnh: ${stdout}`, event.threadID, event.messageID)
         })
     }
 }
