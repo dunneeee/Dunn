@@ -51,6 +51,7 @@ class ThreadModel extends Action {
                 continue;
             }
             try {
+                await this.message.reply("Bot nhận được yêu cầu out thread từ admin, đang tiến hành out thread...", thread.id)
                 await new Promise((reslove) => setTimeout(reslove, 1000))
                 await this.api.removeUserFromGroup(this.botUuid, thread.id)
                 success.push({
