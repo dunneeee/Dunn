@@ -28,8 +28,40 @@ class Noti extends Command {
         msg += this.line + "\n"
         msg += "👉 " + content + "\n"
         msg += "👤 Người gửi: " + admin.name + "\n"
-        await this.message.reply(msg, info.id);
+        msg += this.line + "\n"
+        msg += "📃 Reply tin nhắn này để trả lời, có tác dụng trong 5 phút\n"
+        const resInfo = await this.message.reply(msg, info.id);
+        if(!resInfo) return "Không thể gửi thông báo đến nhóm này";
+        this.messageTemp.add({
+            command: this,
+            messageID: resInfo.messageID,
+            type: "message_reply",
+            action: "reply",
+            data: event.threadID
+        })
         return "Đã gửi thông báo đến nhóm " + info.name;
+    }
+
+    async onReply({event, args}, temp) {
+        const {action, data: reciver} = temp;
+        if(action == "reply") {
+            let message = ""
+            message += "📢 Phản hồi\n",
+            message += this.line + "\n"
+            message += "👉 " + args.join(" ") + "\n"
+            message += "👤 Người gửi: " + (await User.get(event.senderID, event.threadID))?.name  + " - " + event.senderID + "\n"
+            message += this.line + "\n"
+            message += "📃 Reply tin nhắn này để trả lời, có tác dụng trong 5 phút\n"
+            const res = await this.message.reply(message, reciver);
+            if(!res) return "Không thể gửi phản hồi đến admin này!";
+            this.messageTemp.add({
+                command: this,
+                messageID: res.messageID,
+                type: "message_reply",
+                action: "admin_reply",
+                data: event.threadID
+            })
+        }
     }
 }
 
