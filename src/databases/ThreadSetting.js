@@ -12,6 +12,7 @@ class ThreadSetting {
     this._bsend = data.bsend;
     this._notiJoin = data.notiJoin;
     this._notiLeave = data.notileave;
+    this._antiout = data.antiout;
   }
 
   get unsend() {
@@ -20,15 +21,21 @@ class ThreadSetting {
     };
   }
 
+  get antiout() {
+    return this._antiout ?? false;
+  }
+
   setUnsend(key, value) {
-    if (!key) return {
+    if (!key)
+      return {
         type: "error",
         message: "Thiếu thuộc tính cần thay đổi",
-    };
-    if (!value) return {
+      };
+    if (!value)
+      return {
         type: "error",
         message: "Thiếu giá trị cần thay đổi",
-    };
+      };
     switch (key) {
       case "onlymod":
       case "onlyMod":
@@ -98,6 +105,7 @@ class ThreadSetting {
       bsend: this.bsend,
       notiJoin: this.notiJoin,
       notiLeave: this.notiLeave,
+      antiout: this.antiout,
     };
   }
 

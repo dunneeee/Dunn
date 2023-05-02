@@ -8,7 +8,8 @@ class AdminTableTime {
   }
   autoCall(ms) {
     const stopId = setInterval(async () => {
-      this.tkb = await this.callData();
+      const data = await this.callData()
+      if(data) this.tkb = data
     }, ms);
     return () => {
       clearInterval(stopId);

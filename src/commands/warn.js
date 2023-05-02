@@ -7,7 +7,7 @@ class Warn extends Command {
             name: "warn",
             author: "Dunnn",
             description: "Cảnh cáo thành viên",
-            usage: "<prefix>warn <@tag/reply> [lý do]",
+            usage: "<prefix>warn <@tag/reply> : [lý do]",
             coolDown: 5000,
             permission: Permission.MOD
         }, dl)
