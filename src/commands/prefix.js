@@ -25,10 +25,10 @@ class Prefix extends Command {
     }
 
     async onEvery(event) {
-        const res = await this.model.handleText(event);
-        if(res && (event.type == "message" || event.type == "message_reply")) {
-            await this.message.reply(res, event.threadID, event.messageID)
-        }
+        // const res = await this.model.handleText(event);
+        // if(res && (event.type == "message" || event.type == "message_reply")) {
+        //     await this.message.reply(res, event.threadID, event.messageID)
+        // }
     }
 }
 
