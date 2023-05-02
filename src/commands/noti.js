@@ -51,16 +51,16 @@ class Noti extends Command {
             message += "👉 " + args.join(" ") + "\n"
             message += "👤 Người gửi: " + (await User.get(event.senderID, event.threadID))?.name  + " - " + event.senderID + "\n"
             message += this.line + "\n"
-            message += "📃 Reply tin nhắn này để trả lời, có tác dụng trong 5 phút\n"
+            // message += "📃 Reply tin nhắn này để trả lời, có tác dụng trong 5 phút\n"
             const res = await this.message.reply(message, reciver);
-            if(!res) return "Không thể gửi phản hồi đến admin này!";
-            this.messageTemp.add({
-                command: this,
-                messageID: res.messageID,
-                type: "message_reply",
-                action: "admin_reply",
-                data: event.threadID
-            })
+            if(!res) return "Có lỗi xảy ra khi gửi phản hồi, vui lòng thử lại sau!";
+            // this.messageTemp.add({
+            //     command: this,
+            //     messageID: res.messageID,
+            //     type: "message_reply",
+            //     action: "admin_reply",
+            //     data: event.threadID
+            // })
         }
     }
 }
