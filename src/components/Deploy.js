@@ -4,6 +4,7 @@ import MyHook from './MyHook'
 import { CheckBan } from '../validators'
 import { Thread, User } from '../databases'
 import ThreadSetting from '../databases/ThreadSetting'
+import MyCheckPermission from '../validators/MyCheckPermission'
 
 
 export default class Deploy extends Dunn {
@@ -14,7 +15,7 @@ export default class Deploy extends Dunn {
         await this.loadCommands(join(__dirname, "../commands"))
         await this.loadEvents(join(__dirname, "../events"))
         this.addValidator(new CheckBan(this, {name: "check_ban"}))
-        this.addValidator(new CheckPermission(this, {name: "check_permission"}))
+        this.addValidator(new MyCheckPermission(this, {name: "check_permission"}))
         this.addValidator(new CheckCoolDown(this, {name: "check_cooldown"}))
     }
 

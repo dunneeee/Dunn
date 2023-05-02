@@ -16,7 +16,8 @@ class Tkb extends Command {
     }
 
     async onLoad() {
-        await this.model.init()
+        await this.model.init();
+        return "Đã load tự động update thời khoá biểu của admin!"
     }
 
     async onCall({event, args}) {
