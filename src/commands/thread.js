@@ -25,7 +25,11 @@ class Thread extends Command {
             if(uids.length == 0) return "Vui lòng nhập uid cần out"
             return (await this.model.outThread(uids, event.threadID)).toString()
         }
-
+        else if(flag == "ban") {
+            const uids = args.slice(1)
+            if(uids.length == 0) return "Vui lòng nhập uid cần ban"
+            return (await this.model.banThread(uids, event.threadID)).toString()
+        }
         else {
             return "Không đúng cú pháp, vui lòng gõ <prefix>help thread để xem hướng dẫn".replace(/<prefix>/g, await this.hook.getPrefix(event))
         }

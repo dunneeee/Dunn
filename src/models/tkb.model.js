@@ -16,7 +16,6 @@ class TkbModel extends Action{
         const data = typeof day === 'undefined' ? this.tkb.getNow() : this.tkb.getDay(day) 
         const time = data.time
         const datas = data.datas
-        console.log(day)
         if(datas.every(e => e.lesson === 0)) return "Hôm nay không có tiết nào cả"
         return this.handleText(datas, time)            
 

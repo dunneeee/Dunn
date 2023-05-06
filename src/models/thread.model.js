@@ -85,6 +85,15 @@ class ThreadModel extends Action {
             }
         }
     }
+
+    async banThread(uids, threadID) {
+        return {
+            data: {},
+            toString() {
+                return "Chức năng này đang được phát triển "
+            }
+        }
+    }
 }
 
 export default ThreadModel;
